@@ -23,3 +23,26 @@ Wallet Application — это RESTful сервис, разработанный �
 - **Docker:** Контейнеризация
 - **Docker Compose:** Оркестрация сервисов
 
+## Структура проекта
+
+src/
+├── main/
+│   ├── java/com/wallet/app/
+│   │   ├── controller/       # REST-контроллеры
+│   │   ├── dto/             # DTO для запросов/ответов
+│   │   ├── entity/          # Сущности базы данных
+│   │   ├── exception/       # Пользовательские исключения
+│   │   ├── repository/      # R2DBC-репозитории
+│   │   ├── service/         # Бизнес-логика
+│   │   └── AppApplication.java  # Точка входа
+│   └── resources/
+│       ├── application.yml  # Конфигурация приложения
+│       └── db/changelog/    # Миграции Liquibase
+├── test/
+│   └── java/com/wallet/app/
+│       └── WalletControllerTest.java  # Интеграционные тесты
+├── Dockerfile               # Dockerfile для сборки
+├── docker-compose.yml       # Конфигурация Docker Compose
+└── build.gradle.kts         # Конфигурация Gradle
+
+
