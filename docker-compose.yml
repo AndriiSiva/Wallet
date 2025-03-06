@@ -1,0 +1,46 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-8081}:8081"
+    environment:
+      - SPRING_R2DBC_URL=${DB_URL:-r2dbc:postgresql://db:5432/wallet_db}
+      - SPRING_R2DBC_USERNAME=${DB_USERNAME:-postgres}
+      - SPRING_R2DBC_PASSWORD=${DB_PASSWORD:-password}
+      - SERVER_PORT=${APP_PORT:-8081}
+      - SPRING_R2DBC_POOL_INITIAL_SIZE=${DB_POOL_INITIAL_SIZE:-50}
+      - SPRING_R2DBC_POOL_MAX_SIZE=${DB_POOL_MAX_SIZE:-200}
+      - SPRING_R2DBC_POOL_MAX_IDLE_TIME=${DB_POOL_MAX_IDLE_TIME:-30s}
+      - SPRING_LIQUIBASE_URL=${LIQUIBASE_URL:-jdbc:postgresql://db:5432/wallet_db}
+      - SPRING_LIQUIBASE_USER=${DB_USERNAME:-postgres}
+      - SPRING_LIQUIBASE_PASSWORD=${DB_PASSWORD:-password}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wallet-net
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-wallet_db}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_MAX_CONNECTIONS=${POSTGRES_MAX_CONNECTIONS:-100}
+      - POSTGRES_SHARED_BUFFERS=${POSTGRES_SHARED_BUFFERS:-256MB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - wallet-net
+
+networks:
+  wallet-net:
+    driver: bridge
+
+volumes:
+  db-data:

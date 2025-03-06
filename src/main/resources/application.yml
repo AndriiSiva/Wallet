@@ -1,0 +1,16 @@
+spring:
+  r2dbc:
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/wallet_db}
+    username: ${SPRING_R2DBC_USERNAME:postgres}
+    password: ${SPRING_R2DBC_PASSWORD:password}
+    pool:
+      initial-size: ${SPRING_R2DBC_POOL_INITIAL_SIZE:50}
+      max-size: ${SPRING_R2DBC_POOL_MAX_SIZE:100}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yml
+    url: ${SPRING_LIQUIBASE_URL:jdbc:postgresql://localhost:5432/wallet_db}
+    user: ${SPRING_LIQUIBASE_USER:postgres}
+    password: ${SPRING_LIQUIBASE_PASSWORD:password}
+
+server:
+  port: ${SERVER_PORT:8081}
